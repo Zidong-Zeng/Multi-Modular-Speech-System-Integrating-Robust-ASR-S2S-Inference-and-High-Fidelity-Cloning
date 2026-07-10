@@ -103,34 +103,7 @@ C2_JSON="./outputs/c2/asr_nbest_predictions.json" OUTDIR="./outputs/c3" \
 
 ## Pipeline Overview
 
-```
-Audio Input
-    |
-    v
-+-------------------------+
-|  C2: VAD + ASR          |
-|  +------+   +--------+  |
-|  | VAD  |-->|  ASR   |  |
-|  |(3-stage)| |(Whisper)| |
-|  +------+   +--------+  |
-|     N-best hypotheses    |
-+-------------------------+
-    |
-    v
-+-------------------------+
-|  C3: Cascade            |
-|  +----------+           |
-|  |Correction|--> LLM    |
-|  +----------+           |
-|  +----------+           |
-|  |Translation|--> LLM   |
-|  +----------+           |
-|  Corrected + Translated |
-+-------------------------+
-    |
-    v
-  Final Output
-```
+![Pipeline Overview](assets/pipeline_overview.png)
 
 ---
 
