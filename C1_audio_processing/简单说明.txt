@@ -1,0 +1,5 @@
+c1_advanced_augmentation是完整处理流程，包含几类增强
+单独运行时：python c1_advanced_augmentation.py --input <音频目录或文件> --outdir <输出目录> --no-vad
+（因为短音频不需要切分所以结尾添加了--no-vad禁用vad切割）
+
+c1_dif_resample_rate.py只是不同采样率的重采样处理。可能不属于核心可执行代码？
