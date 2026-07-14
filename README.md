@@ -316,7 +316,8 @@ python C5_TTS/c5_tts.py \
 ### 7.2 结果图或截图
 
 **C1**
-
+![C1数据输出](image/README/C1_1.png)
+![C1特征提取](image/README/C1_2.png)
 
 **C2-C3**
 
@@ -374,7 +375,8 @@ scripts/
 C1_audio_processing/
   |-- c1_advanced_augmentation.py
   |-- c1_dif_resample_rate.py
-  |-- 简单说明.txt
+  |-- c1_plot_augmented_folder.py
+  |-- README_C1.md
 
 C2_ASR/
   |-- code/
