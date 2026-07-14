@@ -335,6 +335,7 @@ python C5_TTS/c5_tts.py \
 ![1783951775286](image/README/1783951775286.png)
 
 **C5**
+<img width="2384" height="1769" alt="image" src="https://github.com/user-attachments/assets/cfff2a3b-9097-4ded-a80d-f23442391120" />
 
 
 ---
