@@ -1,0 +1,48 @@
+{
+  "project_root": "..",
+  "python": {
+    "c1": "/opt/conda/envs/speech_zxy/bin/python",
+    "c2": "/opt/conda/envs/speech/bin/python",
+    "c3": "/opt/conda/envs/speech/bin/python",
+    "c4": "/opt/conda/envs/speech_tcx/bin/python",
+    "c5": "/opt/conda/envs/cosyvoice/bin/python"
+  },
+  "models": {
+    "asr": "/root/siton-tmp/assignment_C/model/whisper-large-v3",
+    "asr_tiny": "/root/siton-tmp/assignment_C/model/whisper-tiny",
+    "asr_large_v3": "/root/siton-tmp/assignment_C/model/whisper-large-v3",
+    "pyannote": "/root/siton-tmp/assignment_C/model/pyannote-speaker-diarization-3.1",
+    "pyannote_segmentation": "/root/siton-tmp/assignment_C/model/pyannote-segmentation-3.0",
+    "correction": "/root/siton-tmp/assignment_C/model/Qwen3-4B",
+    "translation": "/root/siton-tmp/assignment_C/model/Qwen2.5-1.5B-Instruct",
+    "c4": "/root/siton-tmp/assignment_C/model/seamless-m4t-v2-large",
+    "cosyvoice_repo": "/root/siton-tmp/lmy/CosyVoice",
+    "cosyvoice": "/root/siton-tmp/lmy/CosyVoice2-0.5B"
+  },
+  "correction": {
+    "default_backend": "local",
+    "api": {
+      "base_url": "https://api.example.com/v1",
+      "model": "qwen-plus",
+      "api_key": "",
+      "api_key_env": "DEMO_CORRECTION_API_KEY",
+      "temperature": 0.0,
+      "timeout": 120,
+      "max_new_tokens": 4096
+    }
+  },
+  "scripts": {
+    "c1": "C1_audio_processing/c1_advanced_augmentation.py",
+    "c2": "C2_ASR/code/c2_asr.py",
+    "c3": "C3_cascade/code/c3/cli.py",
+    "c4": "C4_e2e_package/C4_end2end/code/c4_e2e.py",
+    "c5": "C5_TTS/c5_tts.py"
+  },
+  "sample_dir": "C3_cascade/outputs/c2-nbest/cremd-tiny/stage2_chunks",
+  "jobs_dir": "demo_frontend/jobs",
+  "server": {
+    "host": "127.0.0.1",
+    "port": 7860,
+    "max_single_job": true
+  }
+}

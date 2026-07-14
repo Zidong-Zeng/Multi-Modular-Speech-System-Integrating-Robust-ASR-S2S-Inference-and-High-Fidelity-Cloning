@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>多模态语音识别系统</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">S</div>
+    <div>
+      <h1>多模态语音识别系统</h1>
+      <p class="eyebrow">离线服务器演示控制台</p>
+    </div>
+    <div class="topbar-status"><span class="status-dot"></span><span id="server-status">服务器在线</span></div>
+  </header>
+
+  <main class="shell">
+    <section class="panel input-panel">
+      <div class="section-heading">
+        <div><p class="eyebrow">输入样例</p><h2>选择服务器音频</h2></div>
+        <span id="job-badge" class="badge badge-muted">未运行任务</span>
+      </div>
+      <div class="input-row">
+        <label class="field-label" for="sample-select">演示样例</label>
+        <select id="sample-select" class="select-control"><option value="">正在读取样例...</option></select>
+      </div>
+      <div id="sample-meta" class="meta-grid" aria-live="polite">
+        <div><span>时长</span><strong id="sample-duration">--</strong></div>
+        <div><span>采样率</span><strong id="sample-rate">--</strong></div>
+        <div><span>模式</span><strong id="sample-mode">--</strong></div>
+        <div><span>参考文本</span><strong id="sample-reference">--</strong></div>
+      </div>
+    </section>
+
+    <section class="panel config-panel">
+      <div class="section-heading"><div><p class="eyebrow">运行配置</p><h2>模块开关</h2></div><span class="hint">长音频需开启 VAD</span></div>
+      <div class="input-row">
+        <label class="field-label" for="asr-model-select">ASR 模型</label>
+        <select id="asr-model-select" class="select-control">
+          <option value="large-v3" selected>Whisper large-v3</option>
+          <option value="tiny">Whisper tiny</option>
+        </select>
+      </div>
+      <div class="switch-grid">
+        <label class="switch-row"><span><strong>VAD</strong><small>语音活动检测与动态分块</small></span><input id="vad-enabled" type="checkbox" checked><span class="switch-ui"></span></label>
+        <label class="switch-row"><span><strong>Pyannote</strong><small>说话人分离</small></span><input id="pyannote-enabled" type="checkbox"><span class="switch-ui"></span></label>
+        <label class="switch-row"><span><strong>纠错模型</strong><small>ASR top-1 → 纠错 → 翻译</small></span><input id="correction-enabled" type="checkbox" checked><span class="switch-ui"></span></label>
+        <label class="switch-row"><span><strong>C4 对照</strong><small>端到端翻译路线</small></span><input id="c4-enabled" type="checkbox"><span class="switch-ui"></span></label>
+      </div>
+      <div class="input-row correction-backend-row">
+        <label class="field-label" for="correction-backend-select">纠错后端</label>
+        <select id="correction-backend-select" class="select-control">
+          <option value="local" selected>本地 Qwen3-4B</option>
+          <option value="openai_compatible">外部 API 模型</option>
+        </select>
+      </div>
+      <div id="validation-message" class="validation-message" hidden></div>
+      <div class="action-row">
+        <button id="start-button" class="button button-primary"><span>▶</span> 开始识别</button>
+        <button id="stop-button" class="button button-secondary" disabled><span>■</span> 停止任务</button>
+      </div>
+    </section>
+
+    <section class="panel pipeline-panel">
+      <div class="section-heading"><div><p class="eyebrow">处理进度</p><h2>级联流水线</h2></div><span id="pipeline-status" class="status-text">等待开始</span></div>
+      <div class="stage-grid">
+        <div id="stage-c1" class="stage-item"><span class="stage-index">01</span><strong>C1</strong><span>预处理</span></div>
+        <div id="stage-c2" class="stage-item"><span class="stage-index">02</span><strong>C2</strong><span>VAD / ASR</span></div>
+        <div id="stage-c3" class="stage-item"><span class="stage-index">03</span><strong>C3</strong><span>纠错 / 翻译</span></div>
+        <div id="stage-c5" class="stage-item"><span class="stage-index">04</span><strong>C5</strong><span>语音合成</span></div>
+        <div id="stage-c4" class="stage-item stage-optional"><span class="stage-index">05</span><strong>C4</strong><span>可选对照</span></div>
+      </div>
+      <div class="progress-track"><span id="progress-bar"></span></div>
+    </section>
+
+    <section class="result-layout">
+      <div class="panel result-panel">
+        <div class="section-heading"><div><p class="eyebrow">核心结果</p><h2>文本转换</h2></div></div>
+        <div class="text-results">
+          <article class="text-result"><div class="result-label">ASR 原文 <span class="result-state">C2</span></div><p id="asr-result" class="result-text empty-state">等待识别结果</p></article>
+          <article class="text-result"><div class="result-label">纠错英文 <span class="result-state">C3</span></div><p id="correction-result" class="result-text empty-state">等待纠错结果</p></article>
+          <article class="text-result"><div class="result-label">中文翻译 <span class="result-state">C3</span></div><p id="translation-result" class="result-text empty-state">等待翻译结果</p></article>
+        </div>
+        <div class="audio-output"><div><div class="result-label">合成语音 <span class="result-state">C5</span></div><p id="audio-file-label">尚未生成音频</p></div><audio id="c5-audio" controls preload="metadata"></audio></div>
+      </div>
+
+      <aside class="panel log-panel"><div class="section-heading"><div><p class="eyebrow">可观测性</p><h2>运行日志</h2></div><span id="log-count" class="badge badge-muted">0 条</span></div><div id="event-log" class="event-log" aria-live="polite"><div class="empty-state">任务日志将在这里出现</div></div></aside>
+    </section>
+
+    <section class="panel chunks-panel">
+      <div class="section-heading"><div><p class="eyebrow">时间轴</p><h2>音频分块</h2></div><span id="chunk-summary" class="status-text">尚无分块</span></div>
+      <div class="table-wrap"><table><thead><tr><th>序号</th><th>时间</th><th>说话人</th><th>ASR top-1</th><th>N-best</th><th>状态</th></tr></thead><tbody id="chunk-table"><tr><td colspan="6" class="empty-state">运行任务后显示分块</td></tr></tbody></table></div>
+    </section>
+
+    <section id="c4-result" class="panel compare-panel" hidden>
+      <div class="section-heading"><div><p class="eyebrow">可选对照</p><h2>C4 端到端翻译</h2></div><span class="result-state">speech_tcx</span></div>
+      <p id="c4-text" class="result-text empty-state">未启用 C4 对照</p>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
