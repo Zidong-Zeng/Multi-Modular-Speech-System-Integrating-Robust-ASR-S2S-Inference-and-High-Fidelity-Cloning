@@ -136,17 +136,33 @@ python -c "from modelscope import snapshot_download; snapshot_download('iic/Cosy
 
 ### 4.2 安装步骤
 
-基础语音环境示例：
+**方式一：使用 environment.yml 一键安装（推荐）**
+
+仓库根目录提供了 `environment.yml`，可直接创建名为 `speech` 的 conda 环境：
 
 ```bash
-conda create -n speech_tcx python=3.10 -y
-conda activate speech_tcx
+# 克隆仓库
+git clone https://github.com/Zidong-Zeng/Multi-Modular-Speech-System-Integrating-Robust-ASR-S2S-Inference-and-High-Fidelity-Cloning.git
+cd Multi-Modular-Speech-System-Integrating-Robust-ASR-S2S-Inference-and-High-Fidelity-Cloning
+
+# 使用 environment.yml 创建 speech 环境（包含 C1-C4 全部依赖）
+conda env create -f environment.yml
+conda activate speech
+```
+
+> **说明**：`environment.yml` 中已包含 PyTorch 2.8.0、TorchAudio 2.8.0、Transformers 5.13.0、WhisperX、Faster-Whisper、SpeechBrain、pyannote-audio、CosyVoice 等完整的语音处理依赖，无需再手动逐个安装。
+
+**方式二：手动安装（仅当 environment.yml 不可用时）**
+
+```bash
+conda create -n speech python=3.10 -y
+conda activate speech
 
 pip install torch torchaudio transformers accelerate librosa soundfile jiwer tqdm
 pip install huggingface_hub modelscope funasr
 ```
 
-C5 建议使用独立 CosyVoice 环境：
+**C5 建议使用独立 CosyVoice 环境**（如需最新 CosyVoice 特性或避免依赖冲突）：
 
 ```bash
 conda create -n cosyvoice python=3.10 -y
@@ -213,7 +229,7 @@ export COSYVOICE_MODEL=/path/to/CosyVoice2-0.5B
 
 ```bash
 cd /root/siton-tmp/assignment_C
-conda activate speech_tcx
+conda activate speech
 
 export MODEL=/root/siton-tmp/assignment_C/model/whisper-large-v3
 export CORRECTION_MODEL=/root/siton-tmp/assignment_C/model/Qwen3-4B
